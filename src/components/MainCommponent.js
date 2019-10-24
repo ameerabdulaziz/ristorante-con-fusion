@@ -10,6 +10,7 @@ import { LEADERS } from "../shared/leaders";
 import { PROMOTIONS } from "../shared/promotions";
 import MenuComponent from "./MenuCommponent";
 import DishDetailComponent from "./DishDetailComponent";
+import AboutComponent from "./AboutComponent";
 
 class Main extends Component {
     constructor(props) {
@@ -42,6 +43,7 @@ class Main extends Component {
                         featuredLeader={leaders.filter(leader => leader.featured === true)[0]}
                         featuredPromotion={promotions.filter(promotion => promotion.featured === true)[0]}
                     />} />
+                    <Route exact path="/about-us" component={() => <AboutComponent leaders={leaders}/>} />
                     <Route exact path="/menu" component={() => <MenuComponent dishes={this.state.dishes}/>} />
                     <Route path="/menu/:dishId" component={DishDetail} />
                     <Route exact path="/contact-us" component={ContactComponent} />

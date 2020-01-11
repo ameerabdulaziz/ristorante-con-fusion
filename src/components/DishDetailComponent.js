@@ -1,15 +1,5 @@
 import React, { Component } from 'react';
-import {
-    Breadcrumb,
-    BreadcrumbItem, Button,
-    Card,
-    CardBody,
-    CardImg,
-    CardText,
-    CardTitle, Col, Form, FormGroup, Input, Label, Modal,
-    ModalBody,
-    ModalHeader, NavItem, Row
-} from "reactstrap";
+import { Breadcrumb, BreadcrumbItem, Button, Card, CardBody, CardImg, CardText, CardTitle, Col, Label, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { LocalForm, Control, Errors } from 'react-redux-form';
 
@@ -29,7 +19,7 @@ class CommentForm extends Component {
     }
     handleSubmit(values) {
         this.toggleModal();
-        alert(JSON.stringify(values));
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
     }
     render() {
         const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -116,7 +106,7 @@ const RenderDish = ({dish}) => {
 };
 
 const RenderComments = (props) => {
-    const {comments} = props;
+    const { comments, addComment, dishId } = props;
     const dishComments = comments.map((comment) => {
         return (
             <div key={comment.id}>
@@ -132,14 +122,13 @@ const RenderComments = (props) => {
         <div className="col-12 col-md-5">
             <h4>Comments</h4>
             {dishComments}
-            <CommentForm />
+            <CommentForm dishId={dishId} addComment={addComment} />
         </div>
     );
 };
 
-
 const DishDetailComponent = (props) => {
-    const {dish, comments} = props;
+    const {dish, comments, addComment} = props;
     return (
         <div className="container">
             <div className="row">
@@ -155,7 +144,7 @@ const DishDetailComponent = (props) => {
             </div>
             <div className="row">
                 <RenderDish dish={dish} />
-                <RenderComments comments={comments}/>
+                <RenderComments comments={comments} addComment={addComment} dishId={dish.id} />
             </div>
         </div>
     )

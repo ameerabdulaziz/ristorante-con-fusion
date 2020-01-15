@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Card, CardBody, CardImg, CardText, CardTitle, Col, Label, Modal, ModalBody, ModalHeader, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { LocalForm, Control, Errors } from 'react-redux-form';
+import { Loading } from "./LoadingComponent";
 
 class CommentForm extends Component {
     constructor(props) {
@@ -128,26 +129,47 @@ const RenderComments = (props) => {
 };
 
 const DishDetailComponent = (props) => {
-    const {dish, comments, addComment} = props;
-    return (
-        <div className="container">
-            <div className="row">
-                <Breadcrumb>
-                    <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
-                    <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
-                    <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
-                </Breadcrumb>
-                <div className="col-12">
-                    <h3>{dish.name}</h3>
-                    <hr/>
+    const {dish, comments, addComment, isLoading, errMess} = props;
+    if (isLoading) {
+        return(
+            <div className="container">
+                <div className="row">
+                    <Loading />
                 </div>
             </div>
-            <div className="row">
-                <RenderDish dish={dish} />
-                <RenderComments comments={comments} addComment={addComment} dishId={dish.id} />
+        );
+    }
+    else if (errMess) {
+        return(
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
+    else if (dish != null)
+    {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Breadcrumb>
+                        <BreadcrumbItem><Link to="/home">Home</Link></BreadcrumbItem>
+                        <BreadcrumbItem><Link to="/menu">Menu</Link></BreadcrumbItem>
+                        <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
+                    </Breadcrumb>
+                    <div className="col-12">
+                        <h3>{dish.name}</h3>
+                        <hr/>
+                    </div>
+                </div>
+                <div className="row">
+                    <RenderDish dish={dish} />
+                    <RenderComments comments={comments} addComment={addComment} dishId={dish.id} />
+                </div>
+            </div>
+        )
+    }
 };
 
 export default DishDetailComponent;

@@ -8,7 +8,7 @@ import MenuComponent from "./MenuCommponent";
 import DishDetailComponent from "./DishDetailComponent";
 import AboutComponent from "./AboutComponent";
 import { connect } from 'react-redux';
-import { addComment } from "../redux/ActionCreators";
+import { addComment, fetchDishes } from "../redux/ActionCreators";
 
 const mapStateToProps = state => {
     return {
@@ -20,11 +20,16 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+    addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+    fetchDishes: () => { dispatch(fetchDishes())}
 });
 
 
+
 class Main extends Component {
+    componentDidMount() {
+        this.props.fetchDishes();
+    }
 
     render() {
         const {dishes, comments, leaders, promotions, addComment} = this.props;
@@ -32,7 +37,9 @@ class Main extends Component {
         const HomePage = () => {
             return(
                 <HomeComponent
-                    featuredDish={dishes.filter((dish) => dish.featured)[0]}
+                    featuredDish={dishes.dishes.filter((dish) => dish.featured)[0]}
+                    dishesLoading={dishes.isLoading}
+                    dishesErrMess={dishes.errMess}
                     featuredPromotion={promotions.filter((promo) => promo.featured)[0]}
                     featuredLeader={leaders.filter((leader) => leader.featured)[0]}
                 />
@@ -41,7 +48,9 @@ class Main extends Component {
 
         const DishWithId = ({match}) => {
             return(
-                <DishDetailComponent dish={dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+                <DishDetailComponent dish={dishes.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]}
+                                     isLoading={dishes.isLoading}
+                                     errMess={dishes.errMess}
                                      comments={comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
                                      addComment={addComment}
                 />

@@ -8,8 +8,9 @@ import MenuComponent from "./MenuCommponent";
 import DishDetailComponent from "./DishDetailComponent";
 import AboutComponent from "./AboutComponent";
 import { connect } from 'react-redux';
-import { addComment, fetchComments, fetchDishes, fetchPromos, postComment } from "../redux/ActionCreators";
+import { fetchComments, fetchDishes, fetchPromos, postComment } from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
     return {
@@ -69,16 +70,22 @@ class Main extends Component {
         return (
             <div>
                 <Header />
-                <Switch>
-                    <Route path="/home" component={HomePage} />
-                    <Route exact path="/about-us" component={() => <AboutComponent leaders={leaders}/>} />
-                    <Route exact path="/menu" component={() => <MenuComponent dishes={dishes}/>} />
-                    <Route path="/menu/:dishId" component={DishWithId} />
-                    <Route exact path="/contact-us" component={() => <ContactComponent resetFeedbackForm={resetFeedbackForm} />} />
-                    <Redirect to="/home" />
-                </Switch>
+                <TransitionGroup>
+                    <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
+                        <Switch location={this.props.location}>
+                            <Route path="/home" component={HomePage} />
+                            <Route exact path="/about-us" component={() => <AboutComponent leaders={leaders}/>} />
+                            <Route exact path="/menu" component={() => <MenuComponent dishes={dishes}/>} />
+                            <Route path="/menu/:dishId" component={DishWithId} />
+                            <Route exact path="/contact-us" component={() => <ContactComponent resetFeedbackForm={resetFeedbackForm} />} />
+                            <Redirect to="/home" />
+                        </Switch>
+                    </CSSTransition>
+                </TransitionGroup>
                 <FooterComponent />
             </div>
+
+
         );
     }
 }

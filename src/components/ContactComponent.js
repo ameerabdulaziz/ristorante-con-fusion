@@ -7,11 +7,14 @@ class ContactComponent extends Component {
     constructor(props) {
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
     handleSubmit(values) {
         alert(JSON.stringify(values));
         this.props.resetFeedbackForm();
+        this.props.postFeedback(values.firstName, values.lastName, values.phone, values.email, values.agree,
+            values.contentType, values.message);
     }
 
     render() {

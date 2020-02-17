@@ -32,15 +32,16 @@ const RenderCard = ({item, isLoading, errMess}) => {
 };
 
 const HomeComponent = (props) => {
-    const {featuredDish, featuredLeader, featuredPromotion, dishesLoading, dishesErrMess, promoLoading, promoErrMess} = props;
+    const {featuredDish, featuredLeader, featuredPromotion, dishesLoading, dishesErrMess, leadersLoading,
+        leadersErrMess, promoLoading, promoErrMess} = props;
     return (
         <div className="container">
             <div className="row align-items-start">
                 <div className="col-12 col-md m-1">
-                    <RenderCard item={featuredDish} isLoading={dishesLoading} errMess={dishesErrMess}/>
+                    <RenderCard item={featuredDish} isLoading={dishesLoading} errMess={dishesErrMess} />
                 </div>
                 <div className="col-12 col-md m-1">
-                    <RenderCard item={featuredLeader} />
+                    <RenderCard item={featuredLeader} isLoading={leadersLoading} errMess={leadersErrMess}/>
                 </div>
                 <div className="col-12 col-md m-1">
                     <RenderCard item={featuredPromotion} isLoading={promoLoading} errMess={promoErrMess} />

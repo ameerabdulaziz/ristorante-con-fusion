@@ -8,7 +8,7 @@ import MenuComponent from "./MenuCommponent";
 import DishDetailComponent from "./DishDetailComponent";
 import AboutComponent from "./AboutComponent";
 import { connect } from 'react-redux';
-import { fetchComments, fetchDishes, fetchPromos, postComment } from "../redux/ActionCreators";
+import { fetchComments, fetchDishes, fetchLeaders, fetchPromos, postComment, postFeedback } from "../redux/ActionCreators";
 import { actions } from "react-redux-form";
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
@@ -23,7 +23,10 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => ({
     postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
+    postFeedback: (firstname, lastname, telnum, email, agree, contactType, message) =>
+        dispatch(postFeedback(firstname, lastname, telnum, email, agree, contactType, message)),
     fetchDishes: () => { dispatch(fetchDishes())},
+    fetchLeaders: () => { dispatch(fetchLeaders())},
     resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
     fetchComments: () => dispatch(fetchComments()),
     fetchPromos: () => dispatch(fetchPromos())
@@ -36,10 +39,11 @@ class Main extends Component {
         this.props.fetchDishes();
         this.props.fetchComments();
         this.props.fetchPromos();
+        this.props.fetchLeaders();
     }
 
     render() {
-        const {dishes, comments, leaders, promotions, postComment, resetFeedbackForm} = this.props;
+        const {dishes, comments, leaders, promotions, postComment, resetFeedbackForm, postFeedback} = this.props;
 
         const HomePage = () => {
             return(
@@ -48,9 +52,11 @@ class Main extends Component {
                     dishesLoading={dishes.isLoading}
                     dishesErrMess={dishes.errMess}
                     featuredPromotion={promotions.promotions.filter((promo) => promo.featured)[0]}
-                    featuredLeader={leaders.filter((leader) => leader.featured)[0]}
                     promoLoading={promotions.isLoading}
                     promoErrMess={promotions.errMess}
+                    featuredLeader={leaders.leaders.filter((leader) => leader.featured)[0]}
+                    leadersLoading={leaders.isLoading}
+                    leadersErrMess={leaders.errMess}
                 />
             );
         };
@@ -77,15 +83,14 @@ class Main extends Component {
                             <Route exact path="/about-us" component={() => <AboutComponent leaders={leaders}/>} />
                             <Route exact path="/menu" component={() => <MenuComponent dishes={dishes}/>} />
                             <Route path="/menu/:dishId" component={DishWithId} />
-                            <Route exact path="/contact-us" component={() => <ContactComponent resetFeedbackForm={resetFeedbackForm} />} />
+                            <Route exact path="/contact-us" component={() => <ContactComponent
+                                resetFeedbackForm={resetFeedbackForm} postFeedback={postFeedback} />} />
                             <Redirect to="/home" />
                         </Switch>
                     </CSSTransition>
                 </TransitionGroup>
                 <FooterComponent />
             </div>
-
-
         );
     }
 }
